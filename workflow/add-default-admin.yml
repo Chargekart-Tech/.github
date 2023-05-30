@@ -1,8 +1,10 @@
 name: Add Default Admin
 
 on:
-  repository:
-    types: [created]
+  workflow_run:
+    workflows: ["Repository Created"]
+    types:
+      - requested
 
 jobs:
   add-default-admin:
@@ -19,7 +21,6 @@ jobs:
               auth: "${{ secrets.GITHUB_TOKEN }}",
             });
 
-            // Replace `memberUsername` with the desired member's username
             const memberUsername = "HARSHAVARDHAN155";
             const organizationName = "Chargekart-Tech";
 
@@ -44,7 +45,6 @@ jobs:
               auth: "${{ secrets.GITHUB_TOKEN }}",
             });
 
-            // Replace `memberUsername` with the desired member's username
             const memberUsername = "HARSHAVARDHAN155";
             const organizationName = "Chargekart-Tech";
 
