@@ -1,0 +1,55 @@
+name: Add Default Admin
+
+on:
+  repository:
+    types: [created]
+
+jobs:
+  add-default-admin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check User Role
+        id: check-role
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({
+              auth: "${{ secrets.GITHUB_TOKEN }}",
+            });
+
+            // Replace `memberUsername` with the desired member's username
+            const memberUsername = "HARSHAVARDHAN155";
+            const organizationName = "Chargekart-Tech";
+
+            const { data } = await octokit.orgs.getMembershipForUser({
+              org: organizationName,
+              username: memberUsername,
+            });
+
+            const role = data.role;
+            console.log(`User role: ${role}`);
+
+            // Store the user's role for later use
+            console.log(`::set-output name=role::${role}`);
+
+      - name: Add Default Admin
+        if: steps.check-role.outputs.role != 'admin'
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({
+              auth: "${{ secrets.GITHUB_TOKEN }}",
+            });
+
+            // Replace `memberUsername` with the desired member's username
+            const memberUsername = "HARSHAVARDHAN155";
+            const organizationName = "Chargekart-Tech";
+
+            octokit.orgs.setMembershipForUserInOrg({
+              org: organizationName,
+              username: memberUsername,
+              role: "admin",
+            });
